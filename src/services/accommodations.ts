@@ -43,14 +43,15 @@ route.post("/", async (req, res, next) => {
 });
 
 route.put("/:id", async (req, res) => {
-  const updated = await AccommodationModel.findByIdAndUpdate(
+  const updated = await accommodationsSchema.findByIdAndUpdate(
     req.params.id,
     req.body,
     {
-        runValidators: true,
-        new: true,
+      runValidators: true,
+      new: true,
     }
-    res.status(201).send(updated) 
+  );
+  res.status(201).send(updated);
 });
 
 route.delete("/:id", async (req, res, next) => {

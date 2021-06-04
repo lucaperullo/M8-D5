@@ -1,0 +1,114 @@
+components:
+  schemas:
+    Accommodation:
+      type: object
+    id:
+      type: number
+    name:
+      type: string
+    description:
+      type: string
+    maxGuests:
+      type: number
+      minimum: 1
+      maximum: 10
+    city:
+      type: string
+servers:
+  - description: ""
+    url: "http://localhost:3000"
+openapi: 3.0.3
+paths:
+  /accommodation:
+    get:
+      description: Returns a list of accommodations
+      operationId: getAccommodations
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accommodation"
+    post:
+      description: This operation adds new people in the room
+      operationId: addAccomodation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Accommodation"
+      responses:
+        "201":
+          description: Succesufully added new accommodation
+        "400":
+          description: Invalid data
+  "/accommodation/{id}":
+    get:
+      description: returns an existing accommodation
+      operationId: getAccommodationById
+      parameters:
+        - schema:
+            $ref: "#/components/schemas/Accommodation"
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Accommodation"
+        "404":
+          description: The accommodation doesn't exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    delete:
+      description: This operation checks out people from the room
+      operationId: deleteAccommodationById
+      parameters:
+        - schema:
+            $ref: "#/components/schemas/Accommodation"
+          in: path
+          name: id
+          required: true
+      responses:
+        "204":
+          description: Succesufully deleted the accommodation
+        "404":
+          description: The accommodation doesn't exist
+    put:
+      description: This operation edits the accomodation details
+      operationId: editAccommodationById
+      parameters:
+        - schema:
+            $ref: "#/components/schemas/Accommodation"
+          in: path
+          name: id
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Accommodation"
+      responses:
+        "202":
+          description: Succesufully edited the accomodation details
+        "404":
+          description: The accommodation doesn't exist
+info:
+  title: Trivago Clone API
+  description: This is a descriptor.
+  version: 1.0.0
+tags:
+  - name: accomodation

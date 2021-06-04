@@ -1,23 +1,18 @@
 import express from "express";
 import listEndpoints from "express-list-endpoints";
+import { connect } from "./mongoose";
 import route from "./services/accommodations";
-import mongoose from "mongoose";
-import cors from "cors";
 
 const app = express();
+app.use(express.json());
 const port = process.env.PORT || 5000;
-app.use("/acocomodations", route);
-app.use(cors());
+
+app.use("/", route);
 console.table(listEndpoints(app));
-mongoose
-  .connect(process.env.MONGO_CONNECTION, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .then(
-    app.listen(port, () => {
-      console.log("Running on port", port);
-    })
-  )
-  .catch((err) => console.log(err));
+connect();
+app.listen(port, (err?: Object) => {
+  if (err) {
+    return console.error(err);
+  }
+  return console.log(`server is listening on ${port}`);
+});

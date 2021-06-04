@@ -15,9 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const index_1 = __importDefault(require("../models/index"));
 const route = express_1.Router();
-route.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const accommodation = yield index_1.default.find({});
-    res.status(200).send({ accommodations: [] });
+route.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const accommodation = yield index_1.default.find();
+        res.status(200).send(accommodation);
+    }
+    catch (error) {
+        next(error);
+    }
 }));
 route.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -28,20 +33,31 @@ route.get("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function
         next(error);
     }
 }));
-route.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, description, maxGuests, city } = req.body;
-    if (!description || !name || !maxGuests || !city)
-        throw new Error("Invalid data");
-    const accommodations = new index_1.default({
-        description,
-        name,
-        maxGuests,
-        city,
-    });
-    yield accommodations.save();
-    res.status(201).send(accommodations);
+route.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { name, description, maxGuests, city } = req.body;
+        if (!description || !name || !maxGuests || !city)
+            throw new Error("Invalid data");
+        const accommodations = new index_1.default({
+            description,
+            name,
+            maxGuests,
+            city,
+        });
+        yield accommodations.save();
+        res.status(201).send(accommodations);
+    }
+    catch (error) {
+        next(error);
+    }
 }));
-route.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
+route.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const updated = yield index_1.default.findByIdAndUpdate(req.params.id, req.body, {
+        runValidators: true,
+        new: true,
+    });
+    res.status(201).send(updated);
+}));
 route.delete("/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield index_1.default.findByIdAndDelete(req.params.id);
