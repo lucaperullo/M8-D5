@@ -12,6 +12,10 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "@types/express-list-endpoints": "^4.0.1",
+    "@types/mongoose": "^5.11.97",
+    "express": "^4.17.1",
+    "express-list-endpoints": "^5.0.0",
+    "mongoose": "^5.12.12"
   }
 }
